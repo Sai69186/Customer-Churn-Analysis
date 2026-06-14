@@ -1,9 +1,5 @@
 # 🎯 Customer Churn Analysis - Complete Project
 
-## 🚀 Live Interactive Dashboard
-**Access the live React + Vite dashboard here:**
-- **Frontend**: https://spirit-viral-mantis.5173.dev.raccoonai.tech
-- **Backend API**: https://spirit-viral-mantis.3000.dev.raccoonai.tech
 
 ---
 

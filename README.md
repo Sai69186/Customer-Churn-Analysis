@@ -171,15 +171,6 @@ frontend/
 
 ---
 
-## 🚀 How to Access & Use
-
-### View the Interactive Dashboard
-1. **Click here**: https://spirit-viral-mantis.5173.dev.raccoonai.tech
-2. **Explore 4 tabs**:
-   - Overview: KPIs & churn metrics
-   - Analysis: Detailed charts & tables
-   - Segments: Risk segmentation
-   - Recommendations: Strategic initiatives & ROI
 
 ### Run Locally
 ```bash

@@ -1,0 +1,119 @@
+.overview-tab { display: flex; flex-direction: column; gap: 28px; }
+
+/* ── KPI Grid ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.kpi-card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi-blue::before   { background: linear-gradient(90deg, var(--blue-700), var(--blue-400)); }
+.kpi-red::before    { background: linear-gradient(90deg, var(--red-600), #f87171); }
+.kpi-green::before  { background: linear-gradient(90deg, var(--green-600), #4ade80); }
+.kpi-amber::before  { background: linear-gradient(90deg, var(--amber-500), #fcd34d); }
+.kpi-purple::before { background: linear-gradient(90deg, var(--purple-500), #c084fc); }
+.kpi-teal::before   { background: linear-gradient(90deg, var(--teal-500), #2dd4bf); }
+
+.kpi-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+
+.kpi-icon {
+  font-size: 1.8rem;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px;
+  background: var(--gray-100);
+  flex-shrink: 0;
+}
+.kpi-body { flex: 1; min-width: 0; }
+.kpi-value { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); line-height: 1.1; }
+.kpi-label { font-size: 0.8rem; font-weight: 600; color: var(--gray-600); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+.kpi-sub   { font-size: 0.75rem; color: var(--gray-400); margin-top: 2px; }
+
+/* ── Charts row ── */
+.ov-charts {
+  display: grid;
+  grid-template-columns: 280px 1fr 280px;
+  gap: 20px;
+}
+
+/* ── High-risk box ── */
+.high-risk-box { display: flex; flex-direction: column; }
+.hr-stats { display: flex; flex-direction: column; gap: 0; flex: 1; margin-top: 8px; }
+.hr-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--gray-100);
+  font-size: 0.88rem;
+  color: var(--gray-600);
+}
+.hr-row:last-child { border-bottom: none; }
+.hr-row strong { color: var(--gray-900); font-size: 0.95rem; }
+.text-red { color: var(--red-600) !important; }
+.hr-triggers {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 14px;
+}
+.trigger-badge {
+  background: var(--red-100);
+  color: var(--red-600);
+  font-size: 0.72rem; font-weight: 600;
+  padding: 3px 10px; border-radius: 20px;
+  border: 1px solid rgba(220,38,38,0.2);
+}
+
+/* ── Insight banner ── */
+.insight-banner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.ib-item {
+  background: white;
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex; align-items: flex-start; gap: 12px;
+  border: 1px solid var(--gray-200);
+  border-left-width: 4px;
+  box-shadow: var(--shadow-sm);
+}
+.ib-item.danger  { border-left-color: var(--red-500);    background: linear-gradient(to right, #fff5f5, white); }
+.ib-item.warning { border-left-color: var(--amber-500);  background: linear-gradient(to right, #fffbeb, white); }
+.ib-item.success { border-left-color: var(--green-500);  background: linear-gradient(to right, #f0fdf4, white); }
+.ib-item.info    { border-left-color: var(--blue-600);   background: linear-gradient(to right, #eff6ff, white); }
+.ib-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+.ib-item strong { display: block; font-size: 0.9rem; color: var(--gray-800); margin-bottom: 3px; }
+.ib-item p { font-size: 0.8rem; color: var(--gray-500); line-height: 1.4; }
+
+/* ── Responsive ── */
+@media (max-width: 1280px) {
+  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+  .ov-charts { grid-template-columns: 1fr 1fr; }
+  .high-risk-box { grid-column: 1 / -1; }
+  .insight-banner { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .ov-charts { grid-template-columns: 1fr; }
+  .insight-banner { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+}

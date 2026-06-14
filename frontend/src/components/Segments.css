@@ -1,0 +1,89 @@
+.segments-tab { display: flex; flex-direction: column; gap: 24px; }
+
+/* ── Segment cards ── */
+.seg-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.seg-card {
+  background: white; border-radius: var(--radius-lg);
+  padding: 24px; cursor: pointer;
+  border: 2px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  position: relative;
+}
+.seg-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+.seg-card.selected { border-color: currentColor; box-shadow: var(--shadow-lg); }
+.seg-red   { --accent: #dc2626; }
+.seg-amber { --accent: #d97706; }
+.seg-green { --accent: #16a34a; }
+.seg-card.seg-red.selected    { border-color: #dc2626; }
+.seg-card.seg-amber.selected  { border-color: #d97706; }
+.seg-card.seg-green.selected  { border-color: #16a34a; }
+
+.seg-header {
+  display: flex; align-items: flex-start; gap: 12px; margin-bottom: 20px;
+}
+.seg-icon { font-size: 1.8rem; line-height: 1; }
+.seg-header h3 { font-size: 1.1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; }
+.seg-action-badge {
+  font-size: 0.68rem; font-weight: 800; padding: 3px 8px;
+  border-radius: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+.seg-metrics {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 18px;
+}
+.seg-metric {
+  background: var(--gray-50); border-radius: var(--radius-sm);
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 2px;
+}
+.sm-label { font-size: 0.7rem; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+.sm-value { font-size: 1.1rem; font-weight: 800; color: var(--gray-900); }
+.sm-sub   { font-size: 0.72rem; color: var(--gray-500); }
+
+.seg-progress-label { font-size: 0.72rem; color: var(--gray-400); margin-bottom: 4px; font-weight: 600; }
+.seg-progress {
+  height: 6px; background: var(--gray-100); border-radius: 3px;
+  overflow: hidden; margin-bottom: 4px;
+}
+.seg-progress-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+
+.seg-expand-hint {
+  text-align: center; margin-top: 14px;
+  font-size: 0.75rem; color: var(--gray-400); font-weight: 600;
+}
+
+/* ── Expanded action plan ── */
+.seg-actions {
+  margin-top: 16px; padding-top: 16px;
+  border-top: 1px dashed var(--gray-200);
+  animation: fadeUp 0.25s ease;
+}
+.seg-actions-title {
+  font-size: 0.82rem; font-weight: 700; color: var(--gray-700);
+  margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.seg-actions ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.seg-actions li {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 0.85rem; color: var(--gray-700);
+}
+.action-check { color: #16a34a; font-weight: 700; flex-shrink: 0; }
+.seg-hint { margin-top: 10px; font-size: 0.8rem; color: var(--gray-500); }
+.seg-hint strong { color: var(--gray-700); }
+
+/* ── Charts ── */
+.seg-charts {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .seg-cards  { grid-template-columns: 1fr; }
+  .seg-charts { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .seg-cards  { grid-template-columns: 1fr; }
+  .seg-metrics { grid-template-columns: 1fr 1fr; }
+}

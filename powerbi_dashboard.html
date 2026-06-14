@@ -1,0 +1,549 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Analysis Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1F4E78 0%, #2E5C9A 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .dashboard {
+            padding: 40px;
+        }
+        
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .kpi-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .kpi-card.danger {
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+        }
+        
+        .kpi-card.success {
+            background: linear-gradient(135deg, #70AD47 0%, #5A8C3C 100%);
+        }
+        
+        .kpi-card.warning {
+            background: linear-gradient(135deg, #F39C12 0%, #D68910 100%);
+        }
+        
+        .kpi-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .kpi-value {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .kpi-trend {
+            font-size: 0.85em;
+            opacity: 0.8;
+        }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            height: 400px;
+        }
+        
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1F4E78;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #E74C3C;
+        }
+        
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .analysis-table thead {
+            background: linear-gradient(135deg, #1F4E78 0%, #2E5C9A 100%);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .analysis-table th {
+            padding: 15px;
+            text-align: left;
+            font-size: 0.95em;
+        }
+        
+        .analysis-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.95em;
+        }
+        
+        .analysis-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .badge.high-risk {
+            background: #FADBD8;
+            color: #C0392B;
+        }
+        
+        .badge.medium-risk {
+            background: #FCF3CF;
+            color: #D68910;
+        }
+        
+        .badge.low-risk {
+            background: #D5F4E6;
+            color: #1E8449;
+        }
+        
+        .insights-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .insights-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1F4E78;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .insights-title:before {
+            content: "💡";
+            margin-right: 10px;
+            font-size: 1.3em;
+        }
+        
+        .insight-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #E74C3C;
+            border-radius: 5px;
+            line-height: 1.6;
+        }
+        
+        .insight-item strong {
+            color: #1F4E78;
+        }
+        
+        .recommendations {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .recommendations h3 {
+            font-size: 1.5em;
+            color: #1F4E78;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .recommendations h3:before {
+            content: "🎯";
+            margin-right: 10px;
+            font-size: 1.3em;
+        }
+        
+        .recommendation-item {
+            background: linear-gradient(135deg, #e8f4f8 0%, #d4e9f7 100%);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .recommendation-item h4 {
+            color: #1F4E78;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .recommendation-item ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .recommendation-item li {
+            padding: 5px 0;
+            color: #333;
+        }
+        
+        .recommendation-item li:before {
+            content: "✓";
+            margin-right: 8px;
+            color: #70AD47;
+            font-weight: bold;
+        }
+        
+        .footer {
+            background: #1F4E78;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CUSTOMER CHURN ANALYSIS DASHBOARD</h1>
+            <p>Data-driven insights for customer retention strategy</p>
+        </div>
+        
+        <div class="dashboard">
+            <!-- KPI Cards -->
+            <div class="kpi-section">
+                <div class="kpi-card danger">
+                    <div class="kpi-label">Overall Churn Rate</div>
+                    <div class="kpi-value">41.8%</div>
+                    <div class="kpi-trend">2,088 customers churned out of 5,000</div>
+                </div>
+                <div class="kpi-card success">
+                    <div class="kpi-label">Retention Rate</div>
+                    <div class="kpi-value">58.2%</div>
+                    <div class="kpi-trend">2,912 customers retained</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Average Tenure</div>
+                    <div class="kpi-value">20.3 mo</div>
+                    <div class="kpi-trend">Average customer lifetime</div>
+                </div>
+                <div class="kpi-card warning">
+                    <div class="kpi-label">Avg Satisfaction</div>
+                    <div class="kpi-value">2.98/5.0</div>
+                    <div class="kpi-trend">Below optimal threshold</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <div class="chart-title">Churn by Contract Type</div>
+                    <canvas id="contractChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Tech Support Impact</div>
+                    <canvas id="supportChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Contract Analysis Table -->
+            <h3 style="color: #1F4E78; margin-bottom: 20px; font-size: 1.3em;">📋 Contract Type Analysis</h3>
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th>Contract Type</th>
+                        <th>Total Customers</th>
+                        <th>Churned</th>
+                        <th>Churn Rate</th>
+                        <th>Avg Charges</th>
+                        <th>Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Month-to-month</strong></td>
+                        <td>2,434</td>
+                        <td>1,324</td>
+                        <td><strong style="color: #C0392B;">54.4%</strong></td>
+                        <td>$65.13</td>
+                        <td><span class="badge high-risk">HIGH RISK</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>1 Year</strong></td>
+                        <td>1,284</td>
+                        <td>431</td>
+                        <td><strong style="color: #D68910;">33.6%</strong></td>
+                        <td>$64.87</td>
+                        <td><span class="badge medium-risk">MEDIUM RISK</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>2 Year</strong></td>
+                        <td>1,282</td>
+                        <td>333</td>
+                        <td><strong style="color: #1E8449;">26.0%</strong></td>
+                        <td>$64.50</td>
+                        <td><span class="badge low-risk">LOW RISK</span></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- Tech Support Analysis Table -->
+            <h3 style="color: #1F4E78; margin-bottom: 20px; font-size: 1.3em;">🔧 Tech Support Impact</h3>
+            <table class="analysis-table">
+                <thead>
+                    <tr>
+                        <th>Tech Support</th>
+                        <th>Customers</th>
+                        <th>Churned</th>
+                        <th>Churn Rate</th>
+                        <th>Avg Satisfaction</th>
+                        <th>Churn Reduction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>No Support</strong></td>
+                        <td>3,495</td>
+                        <td>1,584</td>
+                        <td><strong style="color: #C0392B;">45.3%</strong></td>
+                        <td>2.99</td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td><strong>With Support</strong></td>
+                        <td>1,505</td>
+                        <td>504</td>
+                        <td><strong style="color: #1E8449;">33.5%</strong></td>
+                        <td>2.96</td>
+                        <td><strong style="color: #70AD47;">↓ 11.8%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <!-- Insights Section -->
+            <div class="insights-section">
+                <div class="insights-title">KEY INSIGHTS</div>
+                <div class="insight-item">
+                    <strong>1. Contract Type is Critical Driver:</strong> Month-to-month contracts show 54.4% churn vs 26% for 2-year contracts—a 2.1x difference. This is the single most impactful factor.
+                </div>
+                <div class="insight-item">
+                    <strong>2. Satisfaction is Paramount:</strong> Customers with satisfaction scores 1-2 have 65% churn rate, while scores 4-5 show only 26% churn. A 2.5x difference based on satisfaction alone.
+                </div>
+                <div class="insight-item">
+                    <strong>3. Tech Support Reduces Risk:</strong> Offering tech support reduces churn by 11.8 percentage points (from 45.3% to 33.5%), making it a high-ROI retention tool.
+                </div>
+                <div class="insight-item">
+                    <strong>4. High-Risk Segment:</strong> 70.2% of customers fall into high-risk categories (month-to-month, low satisfaction, or high support issues). These require immediate intervention.
+                </div>
+                <div class="insight-item">
+                    <strong>5. Early-Stage Vulnerability:</strong> Customers with < 6 months tenure show elevated churn. First 6 months are critical for retention success.
+                </div>
+            </div>
+            
+            <!-- Recommendations -->
+            <div class="recommendations">
+                <h3>ACTION PLAN & RECOMMENDATIONS</h3>
+                
+                <div class="recommendation-item">
+                    <h4>🎯 Priority 1: Contract Migration Strategy</h4>
+                    <ul>
+                        <li>Target month-to-month customers for annual contract conversions</li>
+                        <li>Offer 10-15% discount for 12-month commitment</li>
+                        <li>Implement automated renewal reminders 30 days before expiry</li>
+                        <li><strong>Expected Impact:</strong> Reduce month-to-month churn from 54.4% to ~35% (20% improvement)</li>
+                        <li><strong>Revenue Impact:</strong> ~$400K additional annual retention</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item">
+                    <h4>⭐ Priority 2: Satisfaction Enhancement Program</h4>
+                    <ul>
+                        <li>Proactive outreach to customers with satisfaction scores 1-2</li>
+                        <li>Personalized support sessions with senior support team</li>
+                        <li>Root cause analysis and service improvement plan</li>
+                        <li><strong>Expected Impact:</strong> Improve satisfaction from 65% to 40% churn (25% improvement)</li>
+                        <li><strong>Investment Required:</strong> High-touch support for ~1,300 customers</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item">
+                    <h4>🛠️ Priority 3: Tech Support Expansion</h4>
+                    <ul>
+                        <li>Expand tech support availability (currently only 30% adoption)</li>
+                        <li>Offer free trial period for tech support packages</li>
+                        <li>Implement 24/7 chat support for premium customers</li>
+                        <li><strong>Expected Impact:</strong> Increase tech support adoption from 30% to 50%; reduce churn by 5-8%</li>
+                        <li><strong>Revenue Impact:</strong> +$150K from tech support upsells</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item">
+                    <h4>🚀 Priority 4: Onboarding & Early Stage Focus</h4>
+                    <ul>
+                        <li>Enhanced onboarding program for first 30 days</li>
+                        <li>Weekly check-ins during first 6 months of tenure</li>
+                        <li>Dedicated account manager for high-value new customers</li>
+                        <li><strong>Expected Impact:</strong> Reduce first-6-month churn by 20-30%</li>
+                        <li><strong>Revenue Impact:</strong> Increase customer LTV by 15-20%</li>
+                    </ul>
+                </div>
+                
+                <div class="recommendation-item">
+                    <h4>📊 Priority 5: Segment-Based Retention</h4>
+                    <ul>
+                        <li>Create targeted retention campaigns by risk segment</li>
+                        <li>High-Risk: Aggressive incentives and personalized outreach</li>
+                        <li>Medium-Risk: Service improvements and upgrade offers</li>
+                        <li>Low-Risk: VIP programs and loyalty rewards</li>
+                        <li><strong>Expected Impact:</strong> Overall churn reduction from 41.8% to ~28-30%</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Customer Churn Analysis Dashboard | Generated with Python, SQL, and Data Analytics | All metrics based on 5,000 customer sample</p>
+        </div>
+    </div>
+    
+    <script>
+        // Contract Type Chart
+        const contractCtx = document.getElementById('contractChart').getContext('2d');
+        new Chart(contractCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Month-to-month', '1 Year', '2 Year'],
+                datasets: [{
+                    label: 'Churn Rate (%)',
+                    data: [54.4, 33.6, 26.0],
+                    backgroundColor: ['#E74C3C', '#F39C12', '#70AD47'],
+                    borderColor: ['#C0392B', '#D68910', '#5A8C3C'],
+                    borderWidth: 2,
+                    borderRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 60,
+                        ticks: { callback: function(value) { return value + '%'; } }
+                    }
+                }
+            }
+        });
+        
+        // Tech Support Chart
+        const supportCtx = document.getElementById('supportChart').getContext('2d');
+        new Chart(supportCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['No Support', 'With Support'],
+                datasets: [{
+                    data: [45.3, 33.5],
+                    backgroundColor: ['#E74C3C', '#70AD47'],
+                    borderColor: ['#C0392B', '#5A8C3C'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "model_type": "Random Forest + Logistic Regression",
+  "rf_roc_auc": 0.7955116207660421,
+  "lr_roc_auc": 0.7469750915697356,
+  "features": [
+    "CustomerID",
+    "Age",
+    "Gender",
+    "Location",
+    "TenureMonths",
+    "MonthlyCharges",
+    "TotalCharges",
+    "ContractType",
+    "InternetService",
+    "TechSupport",
+    "OnlineBackup",
+    "DeviceProtection",
+    "SatisfactionScore",
+    "SupportTickets"
+  ],
+  "test_size": 0.3,
+  "random_state": 42
+}

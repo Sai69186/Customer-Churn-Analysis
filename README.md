@@ -296,7 +296,6 @@ npm run dev
 ## 🎉 Next Steps
 
 1. **Review** PROJECT_SUMMARY.md (complete overview)
-2. **Access** interactive dashboard (https://spirit-viral-mantis.5173.dev.raccoonai.tech)
 3. **Read** CHURN_ANALYSIS_REPORT.txt (40+ page deep dive)
 4. **Validate** findings with stakeholders
 5. **Prioritize** which initiatives to launch first
@@ -321,15 +320,13 @@ All project files are available in the workspace sidebar:
 **Version**: 1.0.0  
 **Status**: ✅ Complete & Production-Ready  
 **Last Updated**: 2026-06-14  
-**Dashboard**: https://spirit-viral-mantis.5173.dev.raccoonai.tech
 
 ---
 
 ## 🎯 Start Here
 
 1. **Quick Overview** → Read this README
-2. **Full Details** → See PROJECT_SUMMARY.md
-3. **Live Dashboard** → https://spirit-viral-mantis.5173.dev.raccoonai.tech
+2. **Full Details** → See PROJECT_SUMMARY.md\
 4. **Deep Dive** → CHURN_ANALYSIS_REPORT.txt
 5. **Data/Models** → Workspace files
 
